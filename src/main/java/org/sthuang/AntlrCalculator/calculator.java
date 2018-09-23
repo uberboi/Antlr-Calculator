@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.sthuang.AntlrCalculator.calculatorParser.PowExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.SignedAtomContext;
 
 public class calculator<T> extends calculatorBaseVisitor<T>{
@@ -33,6 +35,32 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 	
 	@Override
 	public T visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
+	
+		if(ctx.TIMES(0) != null) {
+			System.out.println("TIMES():");
+			
+			if(ctx.powExpression() != null) {
+				List<PowExpressionContext> values = ctx.powExpression();
+				//Numbers being multiplied
+				//System.out.println(values.size());
+				for(int i=0; i<values.size(); i++) {
+					//Value to multiply
+					System.out.println(values.get(i).getText());
+				}
+			}
+		}else if(ctx.DIV(0) != null) {
+			System.out.println("DIV():");
+			if(ctx.powExpression() != null) {
+				List<PowExpressionContext>values = ctx.powExpression();
+				//Numbers being divide
+				//System.out.println(values.size());
+				for(int i=0; i<values.size(); i++) {
+					//Value to divide
+					System.out.println(values.get(i).getText());
+				}
+			}
+		}
+		
 		System.out.println("visitMultiplyingExpression: " + ctx.getText());
 		return visitChildren(ctx);
 	}

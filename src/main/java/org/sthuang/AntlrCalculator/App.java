@@ -12,7 +12,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        String expression = "--1^2 = x";
+        String expression = "(1+3)/(2+1) = x";
         calculator c = new calculator();
         calculatorParser parser = c.createParser(expression);
         
