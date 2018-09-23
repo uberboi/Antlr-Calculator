@@ -1,10 +1,13 @@
 package org.sthuang.AntlrCalculator;
 
+import java.util.List;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.sthuang.AntlrCalculator.calculatorParser.SignedAtomContext;
 
 public class calculator<T> extends calculatorBaseVisitor<T>{
 	
@@ -36,13 +39,33 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 	
 	@Override
 	public T visitPowExpression(calculatorParser.PowExpressionContext ctx) {
+		if(ctx.signedAtom() != null) {
+			//prints out base value then exponents
+			List<SignedAtomContext> values = ctx.signedAtom();
+			for(int i=0; i<values.size(); i++) {
+				System.out.println(values.get(i).getText());
+			}
+			//Base value index 0
+			System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
+			
+		}
 		System.out.println("visitPowExpression: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public T visitSignedAtom(calculatorParser.SignedAtomContext ctx) {
-		System.out.println("visitSignedAtom: " + ctx.getText());
+		System.out.print("SignedAtom ");
+		if(ctx.PLUS() != null) {
+			System.out.println("PLUS: " + ctx.getText());
+		} else if(ctx.MINUS() != null) {
+			System.out.println("MINUS: " + ctx.getText());
+		} else if(ctx.atom() != null) {
+			System.out.println("Atom: " + ctx.getText());
+		} else {
+			System.out.println("FUNC: " + ctx.getText());
+		}
+		//System.out.println("visitSignedAtom: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
@@ -56,6 +79,7 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 			System.out.println("Constnat Atom: " + ctx.getText());
 		} else {
 			System.out.println("Parethesis Atom: " + ctx.getText());
+			//ctx.expression();
 		}
 		//System.out.println("visitAtom: " + ctx.getText());
 		return visitChildren(ctx);
