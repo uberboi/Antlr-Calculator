@@ -1,6 +1,6 @@
 package org.sthuang.AntlrCalculator;
 
-import java.util.List;
+import java.util.*;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -8,11 +8,14 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.sthuang.AntlrCalculator.calculatorParser.ExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.MultiplyingExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.PowExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.SignedAtomContext;
 
 public class calculator extends calculatorBaseVisitor<Double>{
+	
+	private HashMap<String, Double> variables = new HashMap<String, Double>();
 	
 	calculatorParser createParser(String expression) {
 		CharStream stream = CharStreams.fromString(expression);
@@ -25,25 +28,41 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitEquation(calculatorParser.EquationContext ctx) {
 		System.out.println("visitEquation: " + ctx.getText());
-		return visitChildren(ctx);
+		List<ExpressionContext> values =  ctx.expression();
+		//always size 2
+		for(int i=0; i<values.size(); i++) {
+			System.out.println("equation: " + (visit(ctx.expression(i))));
+			//System.out.println("Sum: " + sum)
+		}
+		System.out.println("size: " + values.size());
+		//return Double.valueOf(visit(ctx.expression(1)));
+		if(ctx.relop() != null) {
+			
+		}
+
+		//variable passed correctly
+		System.out.println(ctx.expression(1).getText());
+		return 0.0;
+		//return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitExpression(calculatorParser.ExpressionContext ctx) {
 		//System.out.println("PLUS: " + ctx.MINUS() != null);
-		//System.out.println(ctx.PLUS(0));
+		//System.out.println(ctx.MINUS(0));
 		Double sum = 0.0;
-		System.out.println("visitExpression: " + ctx.getText());
+		//System.out.println("visitExpression: " + ctx.getText());
 		if(ctx.PLUS(0) != null) {
 			
 			List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
 			//System.out.println("size: " + values.size());
 			for(int i=0; i<values.size(); i++) {
-				//sum += Double.valueOf(visit(ctx.multiplyingExpression(i)));
+				sum += Double.valueOf(visit(ctx.multiplyingExpression(i)));
 				//System.out.println("Add: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
 				//System.out.println("Sum: " + sum);
 			}
-
+			//System.out.println("sum: " + sum);
+			return sum;
 
 			//System.out.println("sum: " + sum);
 		}else if(ctx.MINUS(0) != null) {
@@ -52,20 +71,21 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			//System.out.println("size: " + values.size());
 			for(int i=1; i<values.size(); i++) {
 				sum -= Double.valueOf(visit(ctx.multiplyingExpression(i)));
-				System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
+				//System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
 				//System.out.println("Sum: " + sum);
 			}
 
+			//System.out.println("sum: " + sum);
+			return sum;
 
-			System.out.println("sum: " + sum);
+		} else {
+			return visit(ctx.multiplyingExpression(0));
 		}
-		return sum;
 		//return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
-	
 		if(ctx.TIMES(0) != null) {
 			//System.out.println("TIMES():");
 			
@@ -89,11 +109,15 @@ public class calculator extends calculatorBaseVisitor<Double>{
 					//System.out.println(values.get(i).getText());
 				}
 			}
+		}else if(ctx.powExpression() != null) {
+
+			return visit(ctx.powExpression(0));
+			
+			//return Double.valueOf(visit(ctx.powExpression(0)));
 		}
 		
-		//System.out.println("visitMultiplyingExpression: " + ctx.getText());
-		return Double.valueOf(visit(ctx.powExpression(0)));
-		//return visitChildren(ctx);
+		System.out.println("visitMultiplyingExpression: " + ctx.getText());
+		return visitChildren(ctx);
 	}
 	
 	@Override
@@ -107,12 +131,13 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			}
 			//Base value index 0
 			//System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
+			return visit(ctx.signedAtom(0));
 			
+			//return Double.valueOf(visit(ctx.signedAtom(0)));
 		}
 		//System.out.println("visitPowExpression: " + ctx.getText());
 
-		return Double.valueOf(visit(ctx.signedAtom(0)));
-		//return visitChildren(ctx);
+		return visitChildren(ctx);
 	}
 	
 	@Override
@@ -124,8 +149,10 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			//System.out.println("MINUS: " + ctx.getText());
 		} else if(ctx.atom() != null) {
 			//System.out.println("Atom: " + ctx.getText());
-			return Double.valueOf(visit(ctx.atom()));
-		} else {
+			//System.out.println(visit(ctx.atom()).getClass().getSimpleName());
+			//return Double.valueOf(visit(ctx.atom()));
+			return visit(ctx.atom());
+		} else if(ctx.func() != null){
 			//System.out.println("FUNC: " + ctx.getText());
 		}
 		//System.out.println("visitSignedAtom: " + ctx.getText());
@@ -139,7 +166,10 @@ public class calculator extends calculatorBaseVisitor<Double>{
 
 			return Double.valueOf(ctx.getText());
 		} else if(ctx.variable() != null) {
-			//System.out.println("Variable Atom: " + ctx.getText());
+			System.out.println("Variable Atom: " + ctx.getText());
+
+			return visit(ctx.variable());
+			
 		} else if(ctx.constant() != null) {
 			//System.out.println("Constant Atom: " + ctx.getText());
 		} else {
@@ -161,8 +191,8 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitVariable(calculatorParser.VariableContext ctx) {
-		//System.out.println("visitVariable: " + ctx.getText());
-		return visitChildren(ctx);
+		System.out.println("visitVariable: " + ctx.getText());
+		return visit(ctx.VARIABLE());
 	}
 	
 	@Override
@@ -180,6 +210,14 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitRelop(calculatorParser.RelopContext ctx) {
 		//System.out.println("visitRelop: " + ctx.getText());
+		if(ctx.EQ() != null) {
+			System.out.println("Relop: " + ctx.getText());
+			return(visit(ctx.EQ()));
+		}else if(ctx.GT() != null) {
+			System.out.println("Relop: " + ctx.getText());
+		}else if(ctx.LT() != null) {
+			System.out.println("Relop: " + ctx.getText());
+		}
 		return visitChildren(ctx);
 	}
 

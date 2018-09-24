@@ -12,7 +12,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        String expression = "(1+4+2) - (2+3) = 0";
+        String expression = "1-6 = a";
         calculator c = new calculator();
         calculatorParser parser = c.createParser(expression);
         
@@ -23,9 +23,9 @@ public class App
         //ast.print(eq);
         
         ParseTree tree = parser.equation();
-        c.visit(tree);
+        //c.visit(tree);
         
-        //System.out.println(new calculator().visit(tree));
+        System.out.println(new calculator().visit(tree));
         //System.out.println(tree.toStringTree(parser));
         
         //System.out.println(expression);
