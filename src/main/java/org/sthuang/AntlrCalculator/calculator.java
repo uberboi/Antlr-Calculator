@@ -8,10 +8,11 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.sthuang.AntlrCalculator.calculatorParser.MultiplyingExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.PowExpressionContext;
 import org.sthuang.AntlrCalculator.calculatorParser.SignedAtomContext;
 
-public class calculator<T> extends calculatorBaseVisitor<T>{
+public class calculator extends calculatorBaseVisitor<Double>{
 	
 	calculatorParser createParser(String expression) {
 		CharStream stream = CharStreams.fromString(expression);
@@ -22,22 +23,51 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 	}
 	
 	@Override
-	public T visitEquation(calculatorParser.EquationContext ctx) {
+	public Double visitEquation(calculatorParser.EquationContext ctx) {
 		System.out.println("visitEquation: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitExpression(calculatorParser.ExpressionContext ctx) {
+	public Double visitExpression(calculatorParser.ExpressionContext ctx) {
+		//System.out.println("PLUS: " + ctx.MINUS() != null);
+		//System.out.println(ctx.PLUS(0));
+		Double sum = 0.0;
 		System.out.println("visitExpression: " + ctx.getText());
-		return visitChildren(ctx);
+		if(ctx.PLUS(0) != null) {
+			
+			List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
+			//System.out.println("size: " + values.size());
+			for(int i=0; i<values.size(); i++) {
+				//sum += Double.valueOf(visit(ctx.multiplyingExpression(i)));
+				//System.out.println("Add: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
+				//System.out.println("Sum: " + sum);
+			}
+
+
+			//System.out.println("sum: " + sum);
+		}else if(ctx.MINUS(0) != null) {
+			sum = Double.valueOf(visit(ctx.multiplyingExpression(0)));
+			List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
+			//System.out.println("size: " + values.size());
+			for(int i=1; i<values.size(); i++) {
+				sum -= Double.valueOf(visit(ctx.multiplyingExpression(i)));
+				System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
+				//System.out.println("Sum: " + sum);
+			}
+
+
+			System.out.println("sum: " + sum);
+		}
+		return sum;
+		//return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
+	public Double visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
 	
 		if(ctx.TIMES(0) != null) {
-			System.out.println("TIMES():");
+			//System.out.println("TIMES():");
 			
 			if(ctx.powExpression() != null) {
 				List<PowExpressionContext> values = ctx.powExpression();
@@ -45,7 +75,7 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 				//System.out.println(values.size());
 				for(int i=0; i<values.size(); i++) {
 					//Value to multiply
-					System.out.println(values.get(i).getText());
+					//System.out.println(values.get(i).getText());
 				}
 			}
 		}else if(ctx.DIV(0) != null) {
@@ -56,58 +86,65 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 				//System.out.println(values.size());
 				for(int i=0; i<values.size(); i++) {
 					//Value to divide
-					System.out.println(values.get(i).getText());
+					//System.out.println(values.get(i).getText());
 				}
 			}
 		}
 		
-		System.out.println("visitMultiplyingExpression: " + ctx.getText());
-		return visitChildren(ctx);
+		//System.out.println("visitMultiplyingExpression: " + ctx.getText());
+		return Double.valueOf(visit(ctx.powExpression(0)));
+		//return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitPowExpression(calculatorParser.PowExpressionContext ctx) {
+	public Double visitPowExpression(calculatorParser.PowExpressionContext ctx) {
 		if(ctx.signedAtom() != null) {
 			//prints out base value then exponents
 			List<SignedAtomContext> values = ctx.signedAtom();
 			for(int i=0; i<values.size(); i++) {
-				System.out.println(values.get(i).getText());
+				//System.out.println(values.get(i).getText());
+
 			}
 			//Base value index 0
-			System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
+			//System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
 			
 		}
-		System.out.println("visitPowExpression: " + ctx.getText());
-		return visitChildren(ctx);
+		//System.out.println("visitPowExpression: " + ctx.getText());
+
+		return Double.valueOf(visit(ctx.signedAtom(0)));
+		//return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitSignedAtom(calculatorParser.SignedAtomContext ctx) {
-		System.out.print("SignedAtom ");
+	public Double visitSignedAtom(calculatorParser.SignedAtomContext ctx) {
+		//System.out.print("SignedAtom ");
 		if(ctx.PLUS() != null) {
-			System.out.println("PLUS: " + ctx.getText());
+			//System.out.println("PLUS: " + ctx.getText());
 		} else if(ctx.MINUS() != null) {
-			System.out.println("MINUS: " + ctx.getText());
+			//System.out.println("MINUS: " + ctx.getText());
 		} else if(ctx.atom() != null) {
-			System.out.println("Atom: " + ctx.getText());
+			//System.out.println("Atom: " + ctx.getText());
+			return Double.valueOf(visit(ctx.atom()));
 		} else {
-			System.out.println("FUNC: " + ctx.getText());
+			//System.out.println("FUNC: " + ctx.getText());
 		}
 		//System.out.println("visitSignedAtom: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitAtom(calculatorParser.AtomContext ctx) {
+	public Double visitAtom(calculatorParser.AtomContext ctx) {
 		if(ctx.scientific() != null) {
-			System.out.println("Scientific Atom: " + ctx.getText());
+			//System.out.println("Scientific Atom: " + ctx.getText());
+
+			return Double.valueOf(ctx.getText());
 		} else if(ctx.variable() != null) {
-			System.out.println("Variable Atom: " + ctx.getText());
+			//System.out.println("Variable Atom: " + ctx.getText());
 		} else if(ctx.constant() != null) {
-			System.out.println("Constnat Atom: " + ctx.getText());
+			//System.out.println("Constant Atom: " + ctx.getText());
 		} else {
-			System.out.println("Parethesis Atom: " + ctx.getText());
-			//ctx.expression();
+			//System.out.println("Parethesis Atom: " + ctx.getText());
+			return Double.valueOf(visit(ctx.expression()));
 		}
 		//System.out.println("visitAtom: " + ctx.getText());
 		return visitChildren(ctx);
@@ -117,32 +154,32 @@ public class calculator<T> extends calculatorBaseVisitor<T>{
 	}
 	
 	@Override
-	public T visitConstant(calculatorParser.ConstantContext ctx) {
-		System.out.println("visitConstant: " + ctx.getText());
+	public Double visitConstant(calculatorParser.ConstantContext ctx) {
+		//System.out.println("visitConstant: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitVariable(calculatorParser.VariableContext ctx) {
-		System.out.println("visitVariable: " + ctx.getText());
+	public Double visitVariable(calculatorParser.VariableContext ctx) {
+		//System.out.println("visitVariable: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitFunc(calculatorParser.FuncContext ctx) {
-		System.out.println("visitFunc: " + ctx.getText());
+	public Double visitFunc(calculatorParser.FuncContext ctx) {
+		//System.out.println("visitFunc: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitFuncname(calculatorParser.FuncnameContext ctx) {
-		System.out.println("visitFuncname: " + ctx.getText());
+	public Double visitFuncname(calculatorParser.FuncnameContext ctx) {
+		//System.out.println("visitFuncname: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
-	public T visitRelop(calculatorParser.RelopContext ctx) {
-		System.out.println("visitRelop: " + ctx.getText());
+	public Double visitRelop(calculatorParser.RelopContext ctx) {
+		//System.out.println("visitRelop: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 

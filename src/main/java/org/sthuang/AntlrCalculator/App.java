@@ -12,7 +12,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        String expression = "(1+3)/(2+1) = x";
+        String expression = "(1+4+2) - (2+3) = 0";
         calculator c = new calculator();
         calculatorParser parser = c.createParser(expression);
         
