@@ -102,6 +102,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
+		Double sum = 1.0;
 		if(ctx.TIMES(0) != null) {
 			//System.out.println("TIMES():");
 			
@@ -112,18 +113,26 @@ public class calculator extends calculatorBaseVisitor<Double>{
 				for(int i=0; i<values.size(); i++) {
 					//Value to multiply
 					//System.out.println(values.get(i).getText());
+					sum *= Double.valueOf(visit(ctx.powExpression(i)));
+					//System.out.println("Sum: " + sum);
 				}
+				return sum;
 			}
 		}else if(ctx.DIV(0) != null) {
-			System.out.println("DIV():");
+			//System.out.println("DIV():");
+			//sum = Double.valueOf(visit(ctx.powExpression(0)));
+			System.out.println("Sum: " + sum);
 			if(ctx.powExpression() != null) {
 				List<PowExpressionContext>values = ctx.powExpression();
 				//Numbers being divide
 				//System.out.println(values.size());
-				for(int i=0; i<values.size(); i++) {
+				for(int i=1; i<values.size(); i++) {
 					//Value to divide
 					//System.out.println(values.get(i).getText());
+					sum /= Double.valueOf(visit(ctx.powExpression(i)));
+					//System.out.println("Sum: " + sum);
 				}
+				return sum;
 			}
 		}else if(ctx.powExpression() != null) {
 
