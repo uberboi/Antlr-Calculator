@@ -79,47 +79,33 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitExpression(calculatorParser.ExpressionContext ctx) {
-		//System.out.println("PLUS: " + ctx.MINUS() != null);
-		//System.out.println(ctx.MINUS(0));
 		Double sum = 0.0;
-		//System.out.println("visitExpression: " + ctx.getText());
 		if(ctx.PLUS(0) != null) {
 			int size = ctx.multiplyingExpression().size();
-			//List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
-			//System.out.println("size: " + size);
 			for(int i=0; i<size; i++) {
+				//Numbers to add
 				Double adder = visit(ctx.multiplyingExpression(i));
 				if(adder != null) {
 				sum += adder;
-				//System.out.println("Add: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
-				//System.out.println("Sum: " + sum);
 				} else {
 					return null;
 				}
 			}
-			//System.out.println("sum: " + sum);
 			return sum;
-
-			//System.out.println("sum: " + sum);
 		}else if(ctx.MINUS(0) != null) {
 			System.out.println("blah");
+			//Number to subtract from
 			sum = visit(ctx.multiplyingExpression(0));
-			//System.out.println(sum);
-			//List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
 			int size = ctx.multiplyingExpression().size();
-			//System.out.println("size: " + values.size());
 			for(int i=1; i<size; i++) {
+				//Numbers to subtract
 				Double subtract = visit(ctx.multiplyingExpression(i));
 				if(subtract != null) {
 					sum -= subtract;
-					//System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
-					//System.out.println("Sum: " + sum);
 				} else {
 					return null;
 				}
 			}
-
-			//System.out.println("sum: " + sum);
 			return sum;
 
 		} else if (ctx.multiplyingExpression(0) != null){
@@ -130,68 +116,48 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
-
-		//System.out.println("visitMultiplyingExpression: " + ctx.getText());
 		Double sum = 1.0;
 		if(ctx.TIMES(0) != null) {
-			//System.out.println("TIMES():");
-			//List<PowExpressionContext> values = ctx.powExpression();
 			int size = ctx.powExpression().size();
 			//Numbers being multiplied
-			//System.out.println(values.size());
 			for(int i=0; i<size; i++) {
 				//Value to multiply
-				//System.out.println(values.get(i).getText());
 				Double multiplier = visit(ctx.powExpression(i));
 				if(multiplier != null) {
 					sum *= multiplier;
-					//System.out.println("Sum: " + sum);
 				}else {
 					return null;
 				}
 			}
 			return sum;
 		}else if(ctx.DIV(0) != null) {
+			//dividend
 			sum = visit(ctx.powExpression(0));
-			//System.out.println("DIV():");
-			//sum = Double.valueOf(visit(ctx.powExpression(0)));
-			//System.out.println("Sum: " + sum);
-			//List<PowExpressionContext>values = ctx.powExpression();
 			int size = ctx.powExpression().size();
-			//Numbers being divide
-			//System.out.println("size: " + size);
+			//iterate and divide by all divisors
 			for(int i=1; i<size; i++) {
 				Double divisor = visit(ctx.powExpression(i));
-				//Value to divide
-				//System.out.println(values.get(i).getText());
 				if(divisor != null) {
 					sum /= divisor;
-					//System.out.println("Sum: " + sum);
 				}else{
 					return null;
 				}
 			}
 			return sum;
 		}else if(ctx.powExpression() != null) {
-			//System.out.println("blah");
 			return visit(ctx.powExpression(0));
-			
-			//return Double.valueOf(visit(ctx.powExpression(0)));
 		}
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitPowExpression(calculatorParser.PowExpressionContext ctx) {
-		//System.out.println("visitPowExpression: " + ctx.getText());
-		//Double sum = visit(ctx.signedAtom(0));
 		if(ctx.signedAtom() != null) {
-			//prints out base value then exponents
-			//List<SignedAtomContext> values = ctx.signedAtom();
+			//Base value
 			Double sum = visit(ctx.signedAtom(0));
 			int size = ctx.signedAtom().size();
-			//System.out.println("size: " + size);
 			for(int i=1; i<size; i++) {
+				//Call math.pow on all exponents
 				Double exponent = visit(ctx.signedAtom(i));
 				if(exponent != null) {
 					sum = Math.pow(sum, exponent);
@@ -200,11 +166,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 				}
 				
 			}
-			//Base value index 0
-			//System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
 			return sum;
-			
-			//return Double.valueOf(visit(ctx.signedAtom(0)));
 		}
 
 		return visitChildren(ctx);
@@ -212,76 +174,51 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitSignedAtom(calculatorParser.SignedAtomContext ctx) {
-		//System.out.print("SignedAtom ");
-
-		//System.out.println("visitSignedAtom: " + ctx.getText());
 		if(ctx.PLUS() != null) {
-			//System.out.println("PLUS: " + ctx.getText());
+			return visit(ctx.signedAtom());
 		} else if(ctx.MINUS() != null) {
-			//System.out.println("MINUS: " + ctx.getText());
+			Double d = visit(ctx.signedAtom());
+			if(d!= null) return d*-1;
+			
+			return null;
 		} else if(ctx.atom() != null) {
-			//System.out.println("Atom: " + ctx.getText());
-			//System.out.println(visit(ctx.atom()).getClass().getSimpleName());
-			//return Double.valueOf(visit(ctx.atom()));
 			return visit(ctx.atom());
 		} else if(ctx.func() != null){
-			//System.out.println("FUNC: " + ctx.getText());
+			return(visit(ctx.func()));
 		}
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitAtom(calculatorParser.AtomContext ctx) {
-		//System.out.println("visitAtom: " + ctx.getText());
 		if(ctx.scientific() != null) {
-			//System.out.println("Scientific Atom: " + ctx.getText());
-			
-			//returns null
-			//Double x = visit(ctx.scientific());
-			//System.out.println("blah visitatom: " + x);
-			//return Double.valueOf(visit(ctx.scientific()));
-			
 			return Double.valueOf(ctx.getText());
 		} else if(ctx.variable() != null) {
-			System.out.println("Variable Atom: " + ctx.getText());
-			//System.out.println("blah1: " + ctx.variable());
-			
 			return visit(ctx.variable());
-			
 		} else if(ctx.constant() != null) {
-			//System.out.println("Constant Atom: " + ctx.getText());
+			return visit(ctx.constant());
 		} else {
-			//System.out.println("Parethesis Atom: " + ctx.getText());
-			return Double.valueOf(visit(ctx.expression()));
+			return visit(ctx.expression());
 		}
-		
-		return visitChildren(ctx);
-		/*
-		return Double.valueOf(ctx.getText());
-		*/
 	}
 	
 	@Override
 	public Double visitConstant(calculatorParser.ConstantContext ctx) {
-		//System.out.println("visitConstant: " + ctx.getText());
 		if(ctx.PI() != null) {
 			System.out.println("Pi constant");
 			return Math.PI;
 		} else if(ctx.EULER() != null) {
 			System.out.println("EULER constant");
 			return Math.E;
-			
 		} else if(ctx.I() != null) {
-			
+			//What to return for imaginary?
 		}
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitVariable(calculatorParser.VariableContext ctx) {
-		//System.out.println("visitVariable: " + ctx.getText());
-		//System.out.println("blah: " + ctx.VARIABLE());
-		//variables.put("a", 99999.0);
+		//If variable is already set then return value
 		if(variables.containsKey(ctx.VARIABLE().getText())) {
 			//Double x = variables.get(ctx.VARIABLE().getText());
 			return variables.get(ctx.VARIABLE().getText());
@@ -293,9 +230,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitFunc(calculatorParser.FuncContext ctx) {
-		//System.out.println("visitFunc: " + ctx.getText());
 		int size = ctx.expression().size();
-		//System.out.println("size: " + size);
 		String s = ctx.funcname().getText();
 		switch (s) {
 			case "cos":
@@ -342,7 +277,6 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			return 2.0;
 		}
 		return null;
-		//return visitChildren(ctx);
 	}
 
 }
