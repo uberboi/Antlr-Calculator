@@ -22,7 +22,7 @@ public class App
     	//3x + 1 = 1 evaluates 3
     	//unable to handle invalid variable
     	//unable to handle imaginary
-        String expression = "+";
+        String expression = "x = *";
         Scanner sc = new Scanner(System.in);
         //while(sc.hasNextLine()) System.out.println(sc.nextLine())
         calculator c = new calculator();

@@ -27,19 +27,25 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitEquation(calculatorParser.EquationContext ctx) {
-		System.out.println("visitEquation: " + ctx.getText());
-		//List<ExpressionContext> values =  ctx.expression();
-		//always size 2
-		//for(int i=0; i<values.size(); i++) {
-			//if variable not set returns null
-			//System.out.println("equation: " + (visit(ctx.expression(i))));
-			//System.out.println("Sum: " + sum)
-		//}
-		//System.out.println("size: " + values.size());
-		//return Double.valueOf(visit(ctx.expression(1)));
-
-		//System.out.println(visit(ctx.relop()));
-		//System.out.println("relop: " + ctx.relop().getText());
+		Double relop = visit(ctx.relop());
+		if(relop != null && relop == 0.0) {
+			String variable = ctx.expression(0).getText();
+			Double value = visit(ctx.expression(1));
+			if(value != null) {
+				variables.put(variable, value);
+				return null;
+			}else {
+				return null;
+			}
+		}else {
+			return visit(ctx.expression(0));
+		}
+		
+		
+		/*******************************************************
+		 *Commented out messy code to try and handle errors
+		 *******************************************************/
+		/*
 		//relop() returns 0.0, 1.0, 2.0 for EQ(), GT(), LT() respectively
 		Double relop = visit(ctx.relop());
 		if(relop != null && relop == 0.0) {
@@ -56,7 +62,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 				//System.out.println("No specified value for " + "'" + variable + "'");
 				//System.out.println("Variable has no specified value");
 				//So result doesn't print
-				// "return value" if you want value returned as result
+				// "return value" if you want value of variable returned as result
 				return null;
 				
 			} else {
@@ -67,14 +73,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 		} else {
 			return visit(ctx.expression(0));
 		}
-
-		//variable passed correctly
-		//no get text returns [rule]
-		//System.out.println(ctx.expression(1).getText());
-		//returns null if variable does not exist
-		//System.out.println((visit(ctx.expression(1))));
-		//return 0.0;
-		//return visitChildren(ctx);
+		*/
 	}
 	
 	@Override
@@ -267,13 +266,10 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	public Double visitRelop(calculatorParser.RelopContext ctx) {
 		//System.out.println("visitRelop: " + ctx.getText());
 		if(ctx.EQ() != null) {
-			System.out.println("RelopEQ: " + ctx.getText());
 			return 0.0;
 		}else if(ctx.GT() != null) {
-			System.out.println("RelopGT: " + ctx.getText());
 			return 1.0;
 		}else if(ctx.LT() != null) {
-			System.out.println("RelopLT: " + ctx.getText());
 			return 2.0;
 		}
 		return null;
