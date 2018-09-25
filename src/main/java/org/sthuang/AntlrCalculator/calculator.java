@@ -204,10 +204,10 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitConstant(calculatorParser.ConstantContext ctx) {
 		if(ctx.PI() != null) {
-			System.out.println("Pi constant");
+			//System.out.println("Pi constant");
 			return Math.PI;
 		} else if(ctx.EULER() != null) {
-			System.out.println("EULER constant");
+			//System.out.println("EULER constant");
 			return Math.E;
 		} else if(ctx.I() != null) {
 			//What to return for imaginary?
@@ -233,6 +233,8 @@ public class calculator extends calculatorBaseVisitor<Double>{
 		String s = ctx.funcname().getText();
 		switch (s) {
 			case "cos":
+				Double x = visit(ctx.expression(0));
+				System.out.println(x);
 				return Math.cos(visit(ctx.expression(0)));
 			case "tan":
 				return Math.tan(visit(ctx.expression(0)));
