@@ -1,6 +1,6 @@
 # Antlr-Calculator
 
-## Technologies: Antlr4, Maven
+## Technologies: Antlr4, Maven, Jline3
 
 Java compiler used to evaluate math expressions using Antlr grammar.
 
