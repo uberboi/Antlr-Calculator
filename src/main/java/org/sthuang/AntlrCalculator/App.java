@@ -21,7 +21,8 @@ public class App
     	//3x>1 relop = x>
     	//3x + 1 = 1 evaluates 3
     	//unable to handle invalid variable
-        String expression = "2^1^3";
+    	//unable to handle imaginary
+        String expression = "log(2,37)";
         Scanner sc = new Scanner(System.in);
         //while(sc.hasNextLine()) System.out.println(sc.nextLine())
         calculator c = new calculator();

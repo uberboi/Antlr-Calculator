@@ -190,7 +190,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			//List<SignedAtomContext> values = ctx.signedAtom();
 			Double sum = visit(ctx.signedAtom(0));
 			int size = ctx.signedAtom().size();
-			System.out.println("size: " + size);
+			//System.out.println("size: " + size);
 			for(int i=1; i<size; i++) {
 				Double exponent = visit(ctx.signedAtom(i));
 				if(exponent != null) {
@@ -264,12 +264,22 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitConstant(calculatorParser.ConstantContext ctx) {
 		//System.out.println("visitConstant: " + ctx.getText());
+		if(ctx.PI() != null) {
+			System.out.println("Pi constant");
+			return Math.PI;
+		} else if(ctx.EULER() != null) {
+			System.out.println("EULER constant");
+			return Math.E;
+			
+		} else if(ctx.I() != null) {
+			
+		}
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitVariable(calculatorParser.VariableContext ctx) {
-		System.out.println("visitVariable: " + ctx.getText());
+		//System.out.println("visitVariable: " + ctx.getText());
 		//System.out.println("blah: " + ctx.VARIABLE());
 		//variables.put("a", 99999.0);
 		if(variables.containsKey(ctx.VARIABLE().getText())) {
@@ -284,7 +294,32 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitFunc(calculatorParser.FuncContext ctx) {
 		//System.out.println("visitFunc: " + ctx.getText());
-		return visitChildren(ctx);
+		int size = ctx.expression().size();
+		//System.out.println("size: " + size);
+		String s = ctx.funcname().getText();
+		switch (s) {
+			case "cos":
+				return Math.cos(visit(ctx.expression(0)));
+			case "tan":
+				return Math.tan(visit(ctx.expression(0)));
+			case "sin":
+				return Math.sin(visit(ctx.expression(0)));
+			case "acos":
+				return Math.acos(visit(ctx.expression(0)));
+			case "atan":
+				return Math.atan(visit(ctx.expression(0)));
+			case "asin":
+				return Math.asin(visit(ctx.expression(0)));
+			case "log":
+				if(size >= 2)
+				return Math.log(visit(ctx.expression(1)))/Math.log(visit(ctx.expression(0)));
+			case "ln":
+				return Math.log(visit(ctx.expression(0)));
+			case "sqrt":
+				return Math.sqrt(visit(ctx.expression(0)));
+		    default:
+		    	return visitChildren(ctx);
+		}
 	}
 	
 	@Override
