@@ -14,9 +14,14 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {
+    	//8/2/2 * (2*3) evaluates 192
+    	//(8/2/2) * (2*3) evalues 12
     	//(1+1)-(2) evalutes 0
     	//1 + 1 - 2 evaluates 4
-        String expression = "a=";
+    	//3x>1 relop = x>
+    	//3x + 1 = 1 evaluates 3
+    	//unable to handle invalid variable
+        String expression = "2^1^3";
         Scanner sc = new Scanner(System.in);
         //while(sc.hasNextLine()) System.out.println(sc.nextLine())
         calculator c = new calculator();
@@ -32,9 +37,7 @@ public class App
         }
         */
         
-        
         calculatorParser parser = c.createParser(expression);
-        
         AstPrinter ast = new AstPrinter();
         //ast.print(parser.equation());
         
@@ -52,7 +55,7 @@ public class App
         
         //System.out.println(expression);
         //System.out.println(Double.valueOf("2e10") + (Double.valueOf("2e10")));
-        //Double x = null;
+        //Double x = Double.valueOf("3x");
         //System.out.println(x);
         
     }
