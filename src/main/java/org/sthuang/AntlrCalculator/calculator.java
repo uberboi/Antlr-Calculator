@@ -30,19 +30,35 @@ public class calculator extends calculatorBaseVisitor<Double>{
 		System.out.println("visitEquation: " + ctx.getText());
 		List<ExpressionContext> values =  ctx.expression();
 		//always size 2
-		for(int i=0; i<values.size(); i++) {
-			System.out.println("equation: " + (visit(ctx.expression(i))));
+		//for(int i=0; i<values.size(); i++) {
+			//if variable not set returns null
+			//System.out.println("equation: " + (visit(ctx.expression(i))));
 			//System.out.println("Sum: " + sum)
-		}
-		System.out.println("size: " + values.size());
+		//}
+		//System.out.println("size: " + values.size());
 		//return Double.valueOf(visit(ctx.expression(1)));
-		if(ctx.relop() != null) {
+		if(ctx.relop().getText() != "") {
+			//System.out.println("relop: " + ctx.relop().getText());
 			
+			String variable = ctx.expression(0).getText();
+			Double value = visit(ctx.expression(1));
+			System.out.println("variable: " + variable);
+			System.out.println("value: " + value);
+			variables.put(variable, value);
+			//So result doesn't print
+			// "return value" if you want value returned as result
+			return null;
+		}else{
+			System.out.println("equation: " + (visit(ctx.expression(0))));
+			return visit(ctx.expression(0));
 		}
 
 		//variable passed correctly
-		System.out.println(ctx.expression(1).getText());
-		return 0.0;
+		//no get text returns [rule]
+		//System.out.println(ctx.expression(1).getText());
+		//returns null if variable does not exist
+		//System.out.println((visit(ctx.expression(1))));
+		//return 0.0;
 		//return visitChildren(ctx);
 	}
 	
@@ -163,11 +179,16 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	public Double visitAtom(calculatorParser.AtomContext ctx) {
 		if(ctx.scientific() != null) {
 			//System.out.println("Scientific Atom: " + ctx.getText());
-
+			
+			//returns null
+			//System.out.println("blah: " + visit(ctx.scientific()));
+			//return Double.valueOf(visit(ctx.scientific()));
+			
 			return Double.valueOf(ctx.getText());
 		} else if(ctx.variable() != null) {
 			System.out.println("Variable Atom: " + ctx.getText());
-
+			//System.out.println("blah1: " + ctx.variable());
+			
 			return visit(ctx.variable());
 			
 		} else if(ctx.constant() != null) {
@@ -192,7 +213,16 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitVariable(calculatorParser.VariableContext ctx) {
 		System.out.println("visitVariable: " + ctx.getText());
-		return visit(ctx.VARIABLE());
+		//System.out.println("blah: " + ctx.VARIABLE());
+		//variables.put("a", 99999.0);
+		if(variables.containsKey(ctx.VARIABLE().getText())) {
+			Double x = variables.get(ctx.VARIABLE().getText());
+			//System.out.println("blahasfas" + x);
+			return variables.get(ctx.VARIABLE().getText());
+		}else {
+			//returns null
+			return visit(ctx.VARIABLE());
+		}
 	}
 	
 	@Override
@@ -211,14 +241,15 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	public Double visitRelop(calculatorParser.RelopContext ctx) {
 		//System.out.println("visitRelop: " + ctx.getText());
 		if(ctx.EQ() != null) {
-			System.out.println("Relop: " + ctx.getText());
-			return(visit(ctx.EQ()));
+			System.out.println("Relop: " + ctx.EQ());
+			return (visit(ctx.EQ()));
 		}else if(ctx.GT() != null) {
-			System.out.println("Relop: " + ctx.getText());
+			//System.out.println("Relop: " + ctx.getText());
 		}else if(ctx.LT() != null) {
-			System.out.println("Relop: " + ctx.getText());
+			//System.out.println("Relop: " + ctx.getText());
 		}
-		return visitChildren(ctx);
+		return 0.0;
+		//return visitChildren(ctx);
 	}
 
 }
