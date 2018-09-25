@@ -28,7 +28,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitEquation(calculatorParser.EquationContext ctx) {
 		System.out.println("visitEquation: " + ctx.getText());
-		List<ExpressionContext> values =  ctx.expression();
+		//List<ExpressionContext> values =  ctx.expression();
 		//always size 2
 		//for(int i=0; i<values.size(); i++) {
 			//if variable not set returns null
@@ -44,12 +44,16 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			Double value = visit(ctx.expression(1));
 			System.out.println("variable: " + variable);
 			System.out.println("value: " + value);
-			variables.put(variable, value);
+			if(value != null) {
+				variables.put(variable, value);
+			}else {
+				System.out.println("No specified value for " + "'" + variable + "'");
+			}
 			//So result doesn't print
 			// "return value" if you want value returned as result
 			return null;
 		}else{
-			System.out.println("equation: " + (visit(ctx.expression(0))));
+			//System.out.println("equation: " + (visit(ctx.expression(0))));
 			return visit(ctx.expression(0));
 		}
 
@@ -73,9 +77,14 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
 			//System.out.println("size: " + values.size());
 			for(int i=0; i<values.size(); i++) {
-				sum += Double.valueOf(visit(ctx.multiplyingExpression(i)));
+				Double adder = visit(ctx.multiplyingExpression(i));
+				if(adder != null) {
+				sum += adder;
 				//System.out.println("Add: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
 				//System.out.println("Sum: " + sum);
+				} else {
+					return null;
+				}
 			}
 			//System.out.println("sum: " + sum);
 			return sum;
@@ -86,73 +95,87 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			List<MultiplyingExpressionContext> values = ctx.multiplyingExpression();
 			//System.out.println("size: " + values.size());
 			for(int i=1; i<values.size(); i++) {
-				sum -= Double.valueOf(visit(ctx.multiplyingExpression(i)));
-				//System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
-				//System.out.println("Sum: " + sum);
+				Double subtract = visit(ctx.multiplyingExpression(i));
+				if(subtract != null) {
+					sum -= subtract;
+					//System.out.println("Subtract: " + Double.valueOf(visit(ctx.multiplyingExpression(i))));
+					//System.out.println("Sum: " + sum);
+				} else {
+					return null;
+				}
 			}
 
 			//System.out.println("sum: " + sum);
 			return sum;
 
-		} else {
+		} else if (ctx.multiplyingExpression(0) != null){
 			return visit(ctx.multiplyingExpression(0));
 		}
-		//return visitChildren(ctx);
+		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitMultiplyingExpression(calculatorParser.MultiplyingExpressionContext ctx) {
+
+		System.out.println("visitMultiplyingExpression: " + ctx.getText());
 		Double sum = 1.0;
 		if(ctx.TIMES(0) != null) {
 			//System.out.println("TIMES():");
-			
-			if(ctx.powExpression() != null) {
-				List<PowExpressionContext> values = ctx.powExpression();
-				//Numbers being multiplied
-				//System.out.println(values.size());
-				for(int i=0; i<values.size(); i++) {
-					//Value to multiply
-					//System.out.println(values.get(i).getText());
-					sum *= Double.valueOf(visit(ctx.powExpression(i)));
+			List<PowExpressionContext> values = ctx.powExpression();
+			//Numbers being multiplied
+			//System.out.println(values.size());
+			for(int i=0; i<values.size(); i++) {
+				//Value to multiply
+				//System.out.println(values.get(i).getText());
+				Double multiplier = visit(ctx.powExpression(i));
+				if(multiplier != null) {
+					sum *= multiplier;
 					//System.out.println("Sum: " + sum);
+				}else {
+					return null;
 				}
-				return sum;
 			}
+			return sum;
 		}else if(ctx.DIV(0) != null) {
+			sum = Double.valueOf(visit(ctx.powExpression(0)));
 			//System.out.println("DIV():");
 			//sum = Double.valueOf(visit(ctx.powExpression(0)));
-			System.out.println("Sum: " + sum);
-			if(ctx.powExpression() != null) {
-				List<PowExpressionContext>values = ctx.powExpression();
-				//Numbers being divide
-				//System.out.println(values.size());
-				for(int i=1; i<values.size(); i++) {
-					//Value to divide
-					//System.out.println(values.get(i).getText());
-					sum /= Double.valueOf(visit(ctx.powExpression(i)));
-					//System.out.println("Sum: " + sum);
+			//System.out.println("Sum: " + sum);
+			List<PowExpressionContext>values = ctx.powExpression();
+			//Numbers being divide
+			//System.out.println("size: " + values.size());
+			for(int i=1; i<values.size(); i++) {
+				Double divisor = visit(ctx.powExpression(i));
+				//Value to divide
+				System.out.println(values.get(i).getText());
+				if(divisor != null) {
+					sum /= divisor;
+					System.out.println("Sum: " + sum);
+				}else{
+					return null;
 				}
-				return sum;
 			}
+			return sum;
 		}else if(ctx.powExpression() != null) {
-
+			//System.out.println("blah");
 			return visit(ctx.powExpression(0));
 			
 			//return Double.valueOf(visit(ctx.powExpression(0)));
 		}
-		
-		System.out.println("visitMultiplyingExpression: " + ctx.getText());
 		return visitChildren(ctx);
 	}
 	
 	@Override
 	public Double visitPowExpression(calculatorParser.PowExpressionContext ctx) {
+		//Double sum = visit(ctx.signedAtom(0));
 		if(ctx.signedAtom() != null) {
 			//prints out base value then exponents
 			List<SignedAtomContext> values = ctx.signedAtom();
-			for(int i=0; i<values.size(); i++) {
-				//System.out.println(values.get(i).getText());
-
+			//System.out.println("size: " + values.size());
+			for(int i=1; i<values.size(); i++) {
+				//Double sum = visit(ctx.signedAtom(i));
+				//System.out.println(sum);
+				
 			}
 			//Base value index 0
 			//System.out.println("Base Pow: " + ctx.signedAtom(0).getText());
@@ -190,7 +213,8 @@ public class calculator extends calculatorBaseVisitor<Double>{
 			//System.out.println("Scientific Atom: " + ctx.getText());
 			
 			//returns null
-			//System.out.println("blah: " + visit(ctx.scientific()));
+			//Double x = visit(ctx.scientific());
+			//System.out.println("blah visitatom: " + x);
 			//return Double.valueOf(visit(ctx.scientific()));
 			
 			return Double.valueOf(ctx.getText());
@@ -225,8 +249,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 		//System.out.println("blah: " + ctx.VARIABLE());
 		//variables.put("a", 99999.0);
 		if(variables.containsKey(ctx.VARIABLE().getText())) {
-			Double x = variables.get(ctx.VARIABLE().getText());
-			//System.out.println("blahasfas" + x);
+			//Double x = variables.get(ctx.VARIABLE().getText());
 			return variables.get(ctx.VARIABLE().getText());
 		}else {
 			//returns null

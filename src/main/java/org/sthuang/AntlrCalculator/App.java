@@ -16,7 +16,7 @@ public class App
     {
     	//(1+1)-(2) evalutes 0
     	//1 + 1 - 2 evaluates 4
-        String expression = "(1+1)/2";
+        String expression = "a=";
         Scanner sc = new Scanner(System.in);
         //while(sc.hasNextLine()) System.out.println(sc.nextLine())
         calculator c = new calculator();
@@ -32,7 +32,7 @@ public class App
         }
         */
         
-  
+        
         calculatorParser parser = c.createParser(expression);
         
         AstPrinter ast = new AstPrinter();
@@ -46,12 +46,14 @@ public class App
         if(result != null) {
         	System.out.println("result: " + result);
         }
+        
         //System.out.println(new calculator().visit(tree));
         //System.out.println(tree.toStringTree(parser));
         
         //System.out.println(expression);
         //System.out.println(Double.valueOf("2e10") + (Double.valueOf("2e10")));
-        //System.out.println(Double.valueOf("1"));
+        //Double x = null;
+        //System.out.println(x);
         
     }
 }
