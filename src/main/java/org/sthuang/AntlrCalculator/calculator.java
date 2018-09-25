@@ -234,7 +234,7 @@ public class calculator extends calculatorBaseVisitor<Double>{
 		switch (s) {
 			case "cos":
 				Double x = visit(ctx.expression(0));
-				System.out.println(x);
+				//System.out.println(x);
 				return Math.cos(visit(ctx.expression(0)));
 			case "tan":
 				return Math.tan(visit(ctx.expression(0)));
