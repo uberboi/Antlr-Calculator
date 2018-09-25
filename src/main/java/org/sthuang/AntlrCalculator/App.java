@@ -36,8 +36,6 @@ public class App
 	            return;
 	        }
     	}
-    	/*
-    	
     	
     	/***********************************************************
     	 * Current Expression examples that cause errors
