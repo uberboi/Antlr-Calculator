@@ -11,89 +11,89 @@
   	<url>http://maven.apache.org</url>
 
   	<properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	</properties>
 
   	<dependencies>
   	
-		<dependency>
-		    <groupId>org.jline</groupId>
-		    <artifactId>jline</artifactId>
-		    <version>3.9.0</version>
-		</dependency>
+	  <dependency>
+	    <groupId>org.jline</groupId>
+		<artifactId>jline</artifactId>
+		<version>3.9.0</version>
+	  </dependency>
 		  	
-  		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4-runtime</artifactId>
-			<version>4.7</version>
-		</dependency>
+  	  <dependency>
+	    <groupId>org.antlr</groupId>
+		<artifactId>antlr4-runtime</artifactId>
+		<version>4.7</version>
+	  </dependency>
 
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4-maven-plugin</artifactId>
-			<version>4.7</version>
-		</dependency>
+	  <dependency>
+	    <groupId>org.antlr</groupId>
+		<artifactId>antlr4-maven-plugin</artifactId>
+		<version>4.7</version>
+	  </dependency>
 		
-    	<dependency>
-      		<groupId>junit</groupId>
-      		<artifactId>junit</artifactId>
-      		<version>3.8.1</version>
-      		<scope>test</scope>
-    	</dependency>
+      <dependency>
+      	<groupId>junit</groupId>
+      	<artifactId>junit</artifactId>
+      	<version>3.8.1</version>
+      	<scope>test</scope>
+      </dependency>
     	
   	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.antlr</groupId>
-				<artifactId>antlr4-maven-plugin</artifactId>
-				<version>4.7</version>
-				<configuration>
-					<arguments>
-						<argument>-no-listener</argument>
-						<argument>-visitor</argument>
-					</arguments>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>antlr4</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+	  <plugins>
+		<plugin>
+		  <groupId>org.antlr</groupId>
+		  <artifactId>antlr4-maven-plugin</artifactId>
+		  <version>4.7</version>
+		  <configuration>
+		    <arguments>
+			  <argument>-no-visitor</argument>
+			  <argument>-listener</argument>
+			 </arguments>
+		  </configuration>
+		    <executions>
+			  <execution>
+			    <goals>
+				  <goal>antlr4</goal>
+				</goals>
+			  </execution>
+			</executions>
+		</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-compiler-plugin</artifactId>
+		  <version>3.3</version>
+		  <configuration>
+		    <source>1.8</source>
+			<target>1.8</target>
+		  </configuration>
+		</plugin>
 			
-			<plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.sthuang.AntlrCalculator.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
+		<plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>org.sthuang.AntlrCalculator.App</mainClass>
+               </manifest>
+            </archive>
+          </configuration>
+        </plugin>
             
-            <plugin>
-	            <groupId>org.codehaus.mojo</groupId>
-	            <artifactId>exec-maven-plugin</artifactId>
-	            <version>1.2.1</version>
-	            <configuration>
-	                <mainClass>org.sthuang.AntlrCalculator.App</mainClass>
-	            </configuration>
-        	</plugin>
-		</plugins>
+        <plugin>
+	      <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>exec-maven-plugin</artifactId>
+	          <version>1.2.1</version>
+	          <configuration>
+	            <mainClass>org.sthuang.AntlrCalculator.App</mainClass>
+	          </configuration>
+        </plugin>
+	  </plugins>
 	</build>
 </project>

@@ -16,7 +16,8 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {
-    	calculator c = new calculator();
+    	/*
+    	calcVisitor c = new calcVisitor();
     	LineReader reader = LineReaderBuilder.builder().build();
     	String prompt = "Enter a Math Expression: ";
     	while(true) {
@@ -36,6 +37,7 @@ public class App
 	            return;
 	        }
     	}
+    	*/
     	
     	/***********************************************************
     	 * Current Expression examples that cause errors
@@ -53,27 +55,24 @@ public class App
         
     	/***************************************
     	 * Tester Code
-    	 * String expression = "cos(pi)";
-         * Scanner sc = new Scanner(System.in);
-         * calculator c = new calculator();
-         * calculatorParser parser = c.createParser(expression);
-         * ParseTree tree = parser.equation();
-         * Double result = c.visit(tree);
-         * if(result != null) {
-         *     System.out.println("result: " + result);
-         * }
-         * 
-         ********Print AST Tree Diagram********
-         * AstPrinter ast = new AstPrinter();
-         * ast.print(parser.equation());
-         * EquationContext eq = parser.equation();
-         * ast.print(eq);
-         * *************************************
-         * 
-         * 
-         * 
-         * 
-         * 
+    	****************************************/
+    	String expression = "x = 1 + 1";
+        //calculator c = new calculator();
+        //calculatorParser parser = c.createParser(expression);
+        //ParseTree tree = parser.equation();
+        //System.out.println(tree.toStringTree(parser));
+        //Double result = c.visit(tree);
+        //if(result != null) {
+        	//System.out.println("result: " + result);
+        //}
+   
+    	
+        /********Print AST Tree Diagram*********/
+    	//AstPrinter ast = new AstPrinter();
+        //ast.print(parser.equation());
+        //EquationContext eq = parser.equation();
+        //ast.print(eq);
+        /**************************************** 
     	 */
     }
 }
