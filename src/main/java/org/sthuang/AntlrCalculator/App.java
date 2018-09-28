@@ -59,11 +59,9 @@ public class App
     	 * Tester Code
     	****************************************/
     	String expression = "x = 1 + 1";
-        calcListener listener = new calcListener();
-        calculatorParser parser = listener.createParser(expression);
+        calculator c = new calculator();
+        calculatorParser parser = c.createParser(expression);
         ParseTree tree = parser.equation();
-        ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(listener, tree);
         //System.out.println(tree.toStringTree(parser));
         //Double result = c.visit(tree);
         //if(result != null) {

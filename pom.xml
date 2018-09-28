@@ -51,8 +51,8 @@
 		  <version>4.7</version>
 		  <configuration>
 		    <arguments>
-			  <argument>-no-visitor</argument>
-			  <argument>-listener</argument>
+			  <argument>-no-listener</argument>
+			  <argument>-visitor</argument>
 			 </arguments>
 		  </configuration>
 		    <executions>
