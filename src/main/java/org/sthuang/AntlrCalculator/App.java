@@ -1,5 +1,7 @@
 package org.sthuang.AntlrCalculator;
-import org.antlr.v4.runtime.tree.ParseTree;
+
+
+import org.antlr.v4.runtime.tree.*;
 
 import java.io.*;
 import java.util.*;
@@ -57,9 +59,11 @@ public class App
     	 * Tester Code
     	****************************************/
     	String expression = "x = 1 + 1";
-        //calculator c = new calculator();
-        //calculatorParser parser = c.createParser(expression);
-        //ParseTree tree = parser.equation();
+        calcListener listener = new calcListener();
+        calculatorParser parser = listener.createParser(expression);
+        ParseTree tree = parser.equation();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(listener, tree);
         //System.out.println(tree.toStringTree(parser));
         //Double result = c.visit(tree);
         //if(result != null) {
