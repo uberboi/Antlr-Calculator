@@ -19,7 +19,7 @@ public class App
     public static void main( String[] args ) throws Exception
     {
     	/*
-    	calcVisitor c = new calcVisitor();
+    	calculator c = new calculator();
     	LineReader reader = LineReaderBuilder.builder().build();
     	String prompt = "Enter a Math Expression: ";
     	while(true) {
@@ -50,6 +50,8 @@ public class App
     	 * 1 + 1 - 2 evaluates 4
     	 * 3x>1 relop = x>
     	 * 3x + 1 = 1 evaluates 3
+    	 * 3 + a = 1 '3+1' is inputted as variable
+    	 * x = 1 variable context no visited
     	 * unable to handle invalid variable
     	 * unable to handle imaginary
     	 */
@@ -58,22 +60,28 @@ public class App
     	/***************************************
     	 * Tester Code
     	****************************************/
-    	String expression = "x = 1 + 1";
+    	String expression = "3x+1";
         calculator c = new calculator();
         calculatorParser parser = c.createParser(expression);
+        //parser.removeErrorListeners();
+        //parser.addErrorListener(new calculatorErrorListener());
         ParseTree tree = parser.equation();
-        //System.out.println(tree.toStringTree(parser));
-        //Double result = c.visit(tree);
-        //if(result != null) {
-        	//System.out.println("result: " + result);
-        //}
+        System.out.println(tree.toStringTree(parser));
+        
+        //Listener Code
+        Listener l = new Listener();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(l, tree);
+        
+        Double result = c.visit(tree);
+        if(result != null) {
+        	System.out.println("result: " + result);
+        }
    
     	
         /********Print AST Tree Diagram*********/
     	//AstPrinter ast = new AstPrinter();
         //ast.print(parser.equation());
-        //EquationContext eq = parser.equation();
-        //ast.print(eq);
         /**************************************** 
     	 */
     }

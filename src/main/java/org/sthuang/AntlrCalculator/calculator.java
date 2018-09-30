@@ -27,10 +27,13 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitEquation(calculatorParser.EquationContext ctx) {
+		//System.out.println(ctx.relop().EQ());
 		Double relop = visit(ctx.relop());
 		if(relop != null && relop == 0.0) {
 			String variable = ctx.expression(0).getText();
 			Double value = visit(ctx.expression(1));
+			//Variable not visited
+			//System.out.println("variable: " + visit(ctx.expression(0)));
 			if(value != null) {
 				variables.put(variable, value);
 				return null;
@@ -78,6 +81,12 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	
 	@Override
 	public Double visitExpression(calculatorParser.ExpressionContext ctx) {
+		// use size to determine which numbers to add
+		// 1 + 1 - 1, size = 1
+		// 1 + 1 + 1 - 1 size = 2
+		//combine plus and minus loops within multiplyingexpression size loop
+		//System.out.println(ctx.PLUS().size());
+		//what about 1 - 1 + 1 -1?
 		Double sum = 0.0;
 		if(ctx.PLUS(0) != null) {
 			int size = ctx.multiplyingExpression().size();
@@ -218,6 +227,10 @@ public class calculator extends calculatorBaseVisitor<Double>{
 	@Override
 	public Double visitVariable(calculatorParser.VariableContext ctx) {
 		//If variable is already set then return value
+		//variable prints
+		//System.out.println("Variable: " + ctx.VARIABLE());
+		//Cannot return terminal node as double
+		//return ctx.VARIABLE();
 		if(variables.containsKey(ctx.VARIABLE().getText())) {
 			//Double x = variables.get(ctx.VARIABLE().getText());
 			return variables.get(ctx.VARIABLE().getText());
